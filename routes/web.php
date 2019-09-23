@@ -11,10 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'MainPageController@index')->name('main');
+
+Route::get('/thanks', function(){
+  return view('front.thanks');
+})->name('thanks');
+
+Route::get('/send_err', function(){
+  return view('front.send_err');
+})->name('send_err');
+
+Route::get('/feast/{feast}/member/create', 'FeastMemberController@create')->name('member.create');
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');

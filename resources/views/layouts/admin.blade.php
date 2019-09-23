@@ -10,7 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/admin.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -21,9 +21,10 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+      @auth
+      <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('/admin') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -33,7 +34,34 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                      @if(Gate::allows('super-admin'))
+                      <li class="nav-item dropdown">
+                          <a id="navbarDropdown0" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                              Редактировать страницы <span class="caret"></span>
+                          </a>
 
+                          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown0">
+                              <a class="dropdown-item" href="{{ route('page_edit') }}">
+                                  Главная
+                              </a>
+
+                              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                  @csrf
+                              </form>
+                          </div>
+                      </li>
+                      @forelse(App\Feast::all() as $feast)
+                      <li class="nav-item">
+                        <a class="nav-link" href="{{ route('member.index', $feast) }}">{{ $feast->title }}</a>
+                      </li>
+                      @endforeach
+                      @else
+                      @forelse(Auth::user()->feasts as $feast)
+                      <li class="nav-item">
+                        <a class="nav-link" href="{{ route('member.index', $feast) }}">{{ $feast->title }}</a>
+                      </li>
+                      @endforeach
+                      @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -58,7 +86,7 @@
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('Выйти') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -71,6 +99,7 @@
                 </div>
             </div>
         </nav>
+      @endauth
 
         <main class="py-4">
             @yield('content')

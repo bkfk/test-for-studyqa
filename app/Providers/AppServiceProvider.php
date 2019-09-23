@@ -4,6 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+use App\FirstFeastMember;
+use App\Observers\FirstFeastMemberObserver;
+use App\SecondFeastMember;
+use App\Observers\SecondFeastMemberObserver;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -23,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        FirstFeastMember::observe(FirstFeastMemberObserver::class);
+        SecondFeastMember::observe(SecondFeastMemberObserver::class);
     }
 }

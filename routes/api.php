@@ -13,6 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::resource('feast/{feast}/member', 'FeastMemberController')->except(['index', 'create', 'destroy']);
+
+Route::put('section/{section}/update_content', 'SectionController@update_content')->name('update_content');
